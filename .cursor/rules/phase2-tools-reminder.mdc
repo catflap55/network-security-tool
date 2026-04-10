@@ -1,0 +1,18 @@
+---
+description: Reminder to extend Security Console with Phase 2+ scanner integrations
+alwaysApply: true
+---
+
+# Security Console — next work: more tools
+
+When working in this repo, **prioritize or remind the user** to add the remaining scanner integrations planned for Phase 2+ unless they are clearly doing something else.
+
+**Implement next (see [docs/PHASE2_EXTENSIONS.md](docs/PHASE2_EXTENSIONS.md) and [docs/ROADMAP.md](docs/ROADMAP.md)):**
+
+- **Nuclei** — templated checks, pinned templates, parser from JSON lines
+- **TLS** — sslscan or testssl.sh wrapper and parser
+- **OpenVAS / Greenbone** — optional Docker/WSL integration (Phase 3 in roadmap)
+- **Job diff** — compare two runs (new/closed ports)
+- **Scheduled scans** — APScheduler or OS scheduler hooks
+
+Keep the existing plugin model, novice-friendly UI patterns, and safe auto-fix (copy-paste only) conventions.
