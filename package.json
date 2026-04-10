@@ -1,0 +1,17 @@
+{
+  "name": "security-tool",
+  "private": true,
+  "workspaces": ["frontend"],
+  "scripts": {
+    "dev": "npm run dev -w frontend",
+    "api:install": "python -m pip install -r backend/requirements.txt",
+    "api": "python -m pip install -q -r backend/requirements.txt && python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000 --app-dir backend",
+    "dev:full": "concurrently -n web,api -c cyan,magenta \"npm run dev\" \"npm run api\"",
+    "build": "npm run build -w frontend",
+    "lint": "npm run lint -w frontend",
+    "preview": "npm run preview -w frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

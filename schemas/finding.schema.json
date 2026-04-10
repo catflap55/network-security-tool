@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://security-console.local/schemas/finding.schema.json",
+  "title": "NormalizedFinding",
+  "type": "object",
+  "required": [
+    "finding_id",
+    "severity",
+    "title",
+    "remediation_key",
+    "plugin_id",
+    "target",
+    "evidence"
+  ],
+  "properties": {
+    "finding_id": {
+      "type": "string",
+      "description": "Stable id: hash or UUID; deterministic per job for same evidence."
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "info"],
+      "description": "Console-normalized severity; see docs for mapping rules."
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional longer text for UI."
+    },
+    "remediation_key": {
+      "type": "string",
+      "description": "Key into REMEDIATION_PLAYBOOKS.md"
+    },
+    "plugin_id": {
+      "type": "string",
+      "examples": ["nmap_quick", "nmap_safe_full"]
+    },
+    "target": {
+      "type": "string",
+      "description": "Primary IP or hostname the finding applies to."
+    },
+    "evidence": {
+      "type": "object",
+      "description": "Structured proof: ports, banners, raw references.",
+      "additionalProperties": true
+    },
+    "first_seen": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}
