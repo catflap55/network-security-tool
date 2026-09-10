@@ -13,6 +13,6 @@
     "preview": "npm run preview -w frontend"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^10.0.5"
   }
 }
