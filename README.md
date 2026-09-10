@@ -4,6 +4,8 @@ A tool that runs **on your own computer** and checks devices on a network **you 
 
 It is not a website and not for scanning the public internet.
 
+This tool is for information only. It is not legal, credit, tax, or financial advice. You must do your own independent checks at the official source before you act. The authors are not liable for decisions you make from these results.
+
 **Contact:** [catflap55.GIT@proton.me](mailto:catflap55.GIT@proton.me)
 
 | Check | What you get |

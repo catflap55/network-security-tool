@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { setConsoleToken } from './api'
+import { DisclaimerFooter, LegalBanner } from './Disclaimer'
 
 export function TokenGate({
   onReady,
@@ -10,6 +11,8 @@ export function TokenGate({
 }) {
   const [value, setValue] = useState('')
   return (
+    <>
+    <LegalBanner />
     <div className="app">
       <header className="header">
         <div>
@@ -50,9 +53,8 @@ export function TokenGate({
           Continue
         </button>
       </form>
-      <footer className="footer muted small">
-        This tool is for information only. It is not legal, credit, tax, or financial advice. You must do your own independent checks at the official source before you act. The authors are not liable for decisions you make from these results.
-      </footer>
+      <DisclaimerFooter />
     </div>
+    </>
   )
 }

@@ -11,6 +11,7 @@ import {
   type Settings,
 } from './api'
 import { CopyBtn } from './CopyBtn'
+import { DisclaimerFooter, LegalBanner } from './Disclaimer'
 import { TokenGate } from './TokenGate'
 import {
   QUICK_START_STEPS,
@@ -283,6 +284,8 @@ export default function App() {
   }
 
   return (
+    <>
+    <LegalBanner />
     <div className="app">
       <header className="header">
         <div>
@@ -785,9 +788,8 @@ export default function App() {
         </div>
       )}
 
-      <footer className="footer muted small">
-        This tool is for information only. It is not legal, credit, tax, or financial advice. You must do your own independent checks at the official source before you act. The authors are not liable for decisions you make from these results. One scan cannot prove a network is perfect.
-      </footer>
+      <DisclaimerFooter extra="One scan cannot prove a network is perfect." />
     </div>
+    </>
   )
 }
