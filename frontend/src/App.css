@@ -350,10 +350,26 @@ table.findings td {
   color: #c9d1d9;
 }
 
-.legal-banner {
+.legal-stack {
   position: sticky;
   top: 0;
   z-index: 80;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.use-limit-banner {
+  margin: 0;
+  background: #7f1d1d;
+  color: #fff;
+  padding: 0.85rem 1.2rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+.legal-banner {
   margin: 0;
   background: #fbbf24;
   color: #111;
@@ -362,7 +378,6 @@ table.findings td {
   font-weight: 700;
   line-height: 1.45;
   text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 
 .footer {

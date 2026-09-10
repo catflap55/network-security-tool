@@ -1,5 +1,7 @@
 This folder is for Windows PCs only.
 
+PERSONAL USE ONLY. Home network that you own only.
+
 1. Install Python from https://www.python.org/downloads/
    On the first screen tick: Add python.exe to PATH
 2. Install Node.js from https://nodejs.org/

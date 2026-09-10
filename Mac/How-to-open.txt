@@ -1,5 +1,7 @@
 This folder is for Apple Mac only.
 
+PERSONAL USE ONLY. Home network that you own only.
+
 FIRST: double-click Read-me-first.html (Safari will open).
 It shows the exact “Not Opened / malware” warning and the clicks
 to allow Start.command. Apple always shows that warning once.

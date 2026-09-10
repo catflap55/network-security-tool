@@ -1,6 +1,6 @@
 # Toolbox
 
-Curated engines the console can wrap. **Do not run** tools against systems you do not own or lack written permission to test.
+Curated engines the console can wrap. **Personal use only.** Run these only against a **home network that you own**. Do not run them against work, school, public Wi-Fi, neighbours, clients, or the public internet.
 
 ## Discovery and ports
 

@@ -2,9 +2,25 @@
 
 This tool is for information only. It is not legal, credit, tax, or financial advice. You must do your own independent checks at the official source before you act. The authors are not liable for decisions you make from these results.
 
-There is no warranty of any kind. The software and text can be wrong, incomplete, or out of date. You use this repository and tool at your own risk. The authors, publisher, and contributors are not liable for any loss, cost, claim, fine, refusal, penalty, or other outcome from using it, copying from it, exporting from it, or relying on it.
+## PERSONAL USE ONLY — HOME NETWORKS YOU OWN
 
-This console is for checking devices on a network you own, or for which you have written permission to test. It is not professional security advice and not a guarantee that a network is safe. The authors are not liable for a missed finding, a false finding, downtime, data loss, or any other outcome of a scan. Unauthorised scanning can be illegal.
+**This tool is strictly for personal use on a home network that you own.**
+
+It is **not** for:
+
+- work or office networks
+- school or university networks
+- public Wi-Fi (cafés, hotels, airports, trains)
+- a neighbour’s network
+- a client’s network
+- anyone else’s devices
+- the public internet
+
+Do not scan a network you do not own. Unauthorised scanning can be illegal. If you use this console anywhere else, that is your decision and your risk. The authors, publisher, and contributors are not liable for that use, or for any fine, claim, outage, or other outcome.
+
+This is not professional security advice and not a guarantee that a network is safe. The authors are not liable for a missed finding, a false finding, downtime, data loss, or any other outcome of a scan.
+
+There is no warranty of any kind. The software and text can be wrong, incomplete, or out of date. You use this repository and tool at your own risk. The authors, publisher, and contributors are not liable for any loss, cost, claim, fine, refusal, penalty, or other outcome from using it, copying from it, exporting from it, or relying on it.
 
 ## MIT Limitations
 

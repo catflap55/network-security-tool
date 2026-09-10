@@ -20,7 +20,7 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     title=get_settings().app_name,
-    description="Local authorized network checks. Scan only systems you own or have permission to test.",
+    description="Personal use only. Scan only a home network that you own. Do not scan work, school, public Wi-Fi, neighbours, clients, or the public internet.",
     lifespan=lifespan,
     dependencies=[Depends(require_console_token)],
 )

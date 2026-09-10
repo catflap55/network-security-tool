@@ -1,5 +1,7 @@
 This folder is for Linux only.
 
+PERSONAL USE ONLY. Home network that you own only.
+
 1. Install packages (see README.md, Linux section)
 2. Right-click Start.sh → Run as a program / Run in Terminal
 

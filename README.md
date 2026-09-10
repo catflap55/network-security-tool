@@ -1,13 +1,22 @@
 # Security Console
 
+> [!WARNING]
+> **PERSONAL USE ONLY — HOME NETWORKS YOU OWN**
+>
+> This tool is **strictly for personal use** on a **home network that you own**.
+>
+> Do **not** use it on a work network, a school network, public Wi-Fi, a neighbour’s network, a client’s network, or the public internet.
+>
+> Scanning a network you do not own can be illegal. The authors are not liable if you use it anywhere else. Full text: [DISCLAIMER.md](DISCLAIMER.md)
+
 > [!CAUTION]
 > **Disclaimer — read this first.** Full text: [DISCLAIMER.md](DISCLAIMER.md)
 >
-> This tool is for information only. It is not legal, credit, tax, or financial advice. You must do your own independent checks at the official source before you act. The authors are not liable for decisions you make from these results. There is no warranty of any kind. The software and text can be wrong, incomplete, or out of date. You use this repository and tool at your own risk. The authors, publisher, and contributors are not liable for any loss, cost, claim, fine, refusal, penalty, or other outcome from using it, copying from it, exporting from it, or relying on it. This console is for checking devices on a network you own, or for which you have written permission to test. It is not professional security advice and not a guarantee that a network is safe. The authors are not liable for a missed finding, a false finding, downtime, data loss, or any other outcome of a scan. Unauthorised scanning can be illegal. There is no warranty. The authors, publisher, and contributors are not liable for your use of this software or its results. See **Warranty**, **Liability**, and **MIT Limitations** below.
+> This tool is for information only. It is not legal, credit, tax, or financial advice. You must do your own independent checks at the official source before you act. The authors are not liable for decisions you make from these results. There is no warranty of any kind. The software and text can be wrong, incomplete, or out of date. You use this repository and tool at your own risk. The authors, publisher, and contributors are not liable for any loss, cost, claim, fine, refusal, penalty, or other outcome from using it, copying from it, exporting from it, or relying on it. **PERSONAL USE ONLY.** Strictly for a home network that you own. Do not scan work, school, public Wi-Fi, a neighbour, a client, or the public internet. Unauthorised scanning can be illegal. It is not professional security advice and not a guarantee that a network is safe. The authors are not liable for a missed finding, a false finding, downtime, data loss, or any other outcome of a scan. There is no warranty. The authors, publisher, and contributors are not liable for your use of this software or its results. See **Warranty**, **Liability**, and **MIT Limitations** below.
 
-A tool that runs **on your own computer** and checks devices on a network **you own** (or have written permission to test).
+A tool that runs **on your own computer** and checks devices on a **home network that you own**. **Personal use only.**
 
-It is not a website and not for scanning the public internet.
+It is not a website. It is not for work, school, public Wi-Fi, neighbours, clients, or the public internet.
 
 This tool is for information only. It is not legal, credit, tax, or financial advice. You must do your own independent checks at the official source before you act. The authors are not liable for decisions you make from these results.
 
@@ -21,7 +30,7 @@ This tool is for information only. It is not legal, credit, tax, or financial ad
 | HTTP security headers | Missing browser-security headers |
 | Lab host discovery | Which hosts answer a ping (`LAB_MODE` on) |
 
-Only scan what you are allowed to scan. Misuse can be illegal.
+**Personal use only. Home network you own only.** Misuse can be illegal.
 
 You do **not** need to know how to use a terminal. Install the programs for your computer, download the zip, open **only the folder named after this computer**, then open **Start** inside it.
 
