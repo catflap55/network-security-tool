@@ -20,6 +20,20 @@ Results are explained in plain language, exported as JSON or SARIF, and two jobs
 
 Remediation is copy-paste firewall snippets. The console never changes your PC by itself.
 
+## Screenshots
+
+Unlock with the token from `backend/.env` (the field stays empty here on purpose):
+
+![Unlock Security Console](docs/images/unlock-console.png)
+
+Main console after you tick permission and pick a project:
+
+![Main console with a Home lab project](docs/images/main-console.png)
+
+A finished check and the plain-language findings list:
+
+![Scan job log and findings](docs/images/scan-results.png)
+
 ## Legal
 
 Only scan networks you are **authorized** to test. Unauthorized scanning can be illegal. The authors are not responsible for misuse.
