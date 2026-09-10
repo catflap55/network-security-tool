@@ -1,21 +1,29 @@
-# Security Policy
+# Security policy
 
-## Supported Versions
+## Product
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Security Console is a **local** authorized-scan helper. Keep it on `127.0.0.1`. Do not expose it to the internet.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+## Supported versions
 
-## Reporting a Vulnerability
+Only the current `main` branch is supported.
 
-Use this section to tell people how to report a vulnerability.
+## Report a vulnerability
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Email **catflap55.GIT@proton.me**.
+
+Include:
+
+- What you found
+- Affected version / commit
+- Whether any secrets were exposed
+
+Do **not** attach live credentials, customer scan data, or working exploit code in a public GitHub issue.
+
+You can expect an acknowledgement when the inbox is read. Fixes land on `main`.
+
+## What this project will not include
+
+- Credential stuffing, password spraying, or wireless cracking
+- Bundled exploit payloads
+- Default passwords or shared API tokens in git

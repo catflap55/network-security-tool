@@ -2,11 +2,12 @@ import type { Finding, Job } from './api'
 
 /** Short steps shown at the top for first-time users. */
 export const QUICK_START_STEPS = [
-  'Turn on the backend (black window) and this page — both must run.',
-  'Tick the box below if you are allowed to scan your own network.',
-  'Add a project: give it a name and type IPs to check (e.g. 192.168.1.0/24 or 127.0.0.1).',
-  'Click your project, pick a scan type, then Run scan. Watch Jobs for progress.',
-  'When it finishes, read “What we found” — we explain each item simply.',
+  'Paste the console token from backend/.env (CONSOLE_TOKEN) into the lock screen.',
+  'Turn on the backend and this page — both must run on this computer.',
+  'Tick the permission box if you are allowed to scan your own network.',
+  'Add a project with a name and IPs (e.g. 127.0.0.1 or 192.168.1.0/24). Wide internet ranges are blocked.',
+  'Pick a check type (Nmap, TLS, or HTTP headers), then Start check.',
+  'When it finishes, read “What we found”. Compare two jobs to see what changed.',
 ] as const
 
 export function severityPlain(sev: string): string {
@@ -119,6 +120,34 @@ export function laymanForFinding(f: Finding): LaymanFinding {
         means: 'The app cannot run that plugin yet, or a setting is missing.',
         doNext: ['Pick a different scan from the list, or check locked plugins for setup notes.'],
         needsFix: false,
+      }
+    case 'TLS_LEGACY_PROTOCOL':
+      return {
+        headline: 'Old encryption on this service',
+        means: `${f.target} still speaks a TLS version that browsers treat as unsafe.`,
+        doNext: ['Turn off TLS 1.0/1.1 (and SSL) on that device or reverse proxy.', 'Keep TLS 1.2 or 1.3.'],
+        needsFix: true,
+      }
+    case 'TLS_CERT_EXPIRED':
+      return {
+        headline: 'HTTPS certificate has expired',
+        means: `Browsers will warn on ${f.target} until you install a new certificate.`,
+        doNext: ['Renew or replace the certificate.', 'Check the date on the device clock.'],
+        needsFix: true,
+      }
+    case 'TLS_CERT_EXPIRING':
+      return {
+        headline: 'HTTPS certificate is close to expiry',
+        means: `You still have a little time on ${f.target}, but renewal should be soon.`,
+        doNext: ['Renew the certificate before the date in the technical notes.'],
+        needsFix: true,
+      }
+    case 'HTTP_HEADERS_MISSING':
+      return {
+        headline: 'Website is missing security headers',
+        means: 'The site answered, but it does not send the usual browser-lockdown headers.',
+        doNext: ['Add HSTS and the other headers at the web server or Cloudflare/nginx in front of it.'],
+        needsFix: true,
       }
     default:
       return {

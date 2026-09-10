@@ -1,20 +1,18 @@
-# One-off helper: list folders under paths that look like git repos
-$paths = @(
-    'C:\Users\kelvi\.cursor\worktrees',
-    'C:\Users\kelvi\Documents',
-    'C:\Users\kelvi\source',
-    'C:\Users\kelvi\Projects',
-    'C:\Users\kelvi\repos',
-    'C:\Users\kelvi\dev',
-    'C:\Users\kelvi\github'
+# Optional helper: list git repos under your user profile (no hardcoded usernames).
+$roots = @(
+    (Join-Path $env:USERPROFILE 'Documents'),
+    (Join-Path $env:USERPROFILE 'source'),
+    (Join-Path $env:USERPROFILE 'Projects'),
+    (Join-Path $env:USERPROFILE 'repos'),
+    (Join-Path $env:USERPROFILE 'dev'),
+    (Join-Path $env:USERPROFILE 'github')
 )
 $found = [System.Collections.Generic.HashSet[string]]::new()
-foreach ($base in $paths) {
+foreach ($base in $roots) {
     if (-not (Test-Path $base)) { continue }
     Get-ChildItem -Path $base -Directory -ErrorAction SilentlyContinue | ForEach-Object {
         $p = $_.FullName
-        $git = Join-Path $p '.git'
-        if (-not (Test-Path $git)) { return }
+        if (-not (Test-Path (Join-Path $p '.git'))) { return }
         Push-Location $p
         try {
             $remote = git remote get-url origin 2>$null

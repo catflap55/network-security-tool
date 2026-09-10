@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+from app.config import get_settings
 from app.models import Project
 from app.parsers.nmap_xml import parse_nmap_xml
 from app.plugins.base import ScanPlugin
 from app.schemas_finding import NormalizedFinding
+from app.services.targets import nmap_target_args
 
 
 def _targets_arg(project: Project) -> list[str]:
-    parts = [t.strip() for t in project.targets.replace(",", " ").split() if t.strip()]
-    return parts if parts else ["127.0.0.1"]
+    s = get_settings()
+    cap = 4096 if s.lab_mode else s.max_cidr_hosts
+    return nmap_target_args(project.targets, max_targets=s.max_targets, max_cidr_hosts=cap)
 
 
 class NmapQuickPlugin(ScanPlugin):
@@ -56,15 +59,15 @@ class NmapSafeFullPlugin(ScanPlugin):
         return parse_nmap_xml(xml_bytes, self.id)
 
 
-class LabAggressivePlaceholderPlugin(ScanPlugin):
-    """Registered only when LAB_MODE is true; documents aggressive path."""
+class LabDiscoveryPlugin(ScanPlugin):
+    """Lab-only ping/host discovery. No exploit scripts."""
 
-    id = "lab_aggressive_placeholder"
-    display_name = "Lab aggressive (placeholder)"
-    description = "Example plugin requiring LAB_MODE. Does not run destructive tests in MVP."
+    id = "lab_host_discovery"
+    display_name = "Lab host discovery"
+    description = "Nmap ping scan (-sn) to list live hosts. Requires LAB_MODE. Does not run exploit scripts."
     requires_lab_mode = True
     impact_summary = (
-        "Placeholder: future heavy NSE or UDP sweeps. Requires LAB_MODE=true and explicit UI opt-in."
+        "Sends host-discovery probes only (no port blast). For lab inventory. Requires LAB_MODE=true."
     )
 
     def build_command(self, project: Project, nmap_path: str) -> list[str]:

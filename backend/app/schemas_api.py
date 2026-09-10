@@ -53,6 +53,12 @@ class FindingRead(BaseModel):
 class SettingsRead(BaseModel):
     authorization_acknowledged: bool
     lab_mode_enabled: bool
+    bind_host: str
+    token_required: bool = True
+
+
+class SettingsUpdate(BaseModel):
+    authorization_acknowledged: bool
 
 
 class SettingsUpdate(BaseModel):
@@ -72,3 +78,21 @@ class PluginInfo(BaseModel):
 class PlaybookRead(BaseModel):
     remediation_key: str
     markdown: str
+
+
+class ScheduleCreate(BaseModel):
+    project_id: int
+    plugin_id: str
+    interval_hours: int = 24
+    enabled: bool = True
+
+
+class ScheduleRead(BaseModel):
+    id: int
+    project_id: int
+    plugin_id: str
+    interval_hours: int
+    enabled: bool
+    last_run_at: datetime | None = None
+
+    model_config = {"from_attributes": True}

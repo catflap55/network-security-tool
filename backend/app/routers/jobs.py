@@ -10,10 +10,14 @@ from sqlmodel import Session, select
 
 from app.db import get_session
 from app.models import FindingRow, Job, Project
+from app.plugins.registry import get_plugin
 from app.schemas_api import FindingRead, JobCreate, JobRead
+from app.services.diff import diff_jobs
 from app.services.job_control import request_job_cancel
 from app.services.job_runner import start_job_background
 from app.services.settings_store import get_authorization_acknowledged
+from app.services.targets import TargetError, validate_targets
+from app.config import get_settings
 
 router = APIRouter(prefix="/projects", tags=["jobs"])
 
@@ -37,6 +41,25 @@ def start_job(
     project = session.get(Project, project_id)
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
+
+    plugin = get_plugin(body.plugin_id)
+    if plugin is None:
+        raise HTTPException(status_code=400, detail="Unknown or locked plugin.")
+
+    settings = get_settings()
+    cap = 4096 if settings.lab_mode else settings.max_cidr_hosts
+    try:
+        validate_targets(project.targets, max_targets=settings.max_targets, max_cidr_hosts=cap)
+    except TargetError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    pending = list(session.exec(select(Job).where(Job.status == "pending")))
+    running = list(session.exec(select(Job).where(Job.status == "running")))
+    if len(pending) + len(running) >= settings.max_concurrent_jobs:
+        raise HTTPException(
+            status_code=429,
+            detail="A scan is already running. Wait for it to finish or stop it first.",
+        )
 
     job = Job(project_id=project_id, plugin_id=body.plugin_id, status="pending")
     session.add(job)
@@ -108,6 +131,20 @@ def list_findings(project_id: int, job_id: int, session: Session = Depends(get_s
             )
         )
     return out
+
+
+@router.get("/{project_id}/jobs/{old_job_id}/diff/{new_job_id}")
+def compare_jobs(
+    project_id: int,
+    old_job_id: int,
+    new_job_id: int,
+    session: Session = Depends(get_session),
+) -> dict[str, Any]:
+    old = session.get(Job, old_job_id)
+    new = session.get(Job, new_job_id)
+    if not old or not new or old.project_id != project_id or new.project_id != project_id:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return diff_jobs(session, old_job_id, new_job_id)
 
 
 def _severity_to_sarif_level(sev: str) -> str:
@@ -182,7 +219,7 @@ def export_sarif(project_id: int, job_id: int, session: Session = Depends(get_se
                 "tool": {
                     "driver": {
                         "name": "Security Console",
-                        "informationUri": "https://example.local/security-console",
+                        "informationUri": "https://github.com/catflap55/network-security-tool",
                         "rules": [],
                     }
                 },

@@ -2,14 +2,14 @@
 
 ## Purpose
 
-Security Console is a **local control plane** that orchestrates trusted security scanners, normalizes results into a single finding model, and links findings to remediation guidance. It does not replace a SOC, EDR, or commercial VM platform; it **aggregates** and **explains** work you are authorized to perform on networks you own or operate.
+Security Console is a **local control plane** that orchestrates trusted checks (Nmap, TLS, HTTP headers), normalizes results into a single finding model, and links findings to remediation guidance. It does not replace a SOC, EDR, or commercial VM platform.
 
 ## Threat model
 
 ### Assets
 
 - **Console host**: runs API, UI, SQLite, and stores raw scan artifacts (XML, logs).
-- **Scan credentials**: future phases may store SSH/WMI secrets; MVP uses OS user context only for subprocess tools.
+- **Scan credentials**: this console does not store SSH/WMI passwords. Tools run as the OS user who started the API.
 - **Findings database**: may contain hostnames, IPs, service banners (sensitive on shared machines).
 
 ### Trust boundaries

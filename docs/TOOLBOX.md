@@ -30,23 +30,18 @@ Curated engines the console can wrap. **Do not run** tools against systems you d
 | **OpenVAS / Greenbone** | Network VM, credentialed where configured | Without resource plan (heavy); fragile VLANs. |
 | **Nessus** | Commercial VM | Licensing and scope per vendor policy. |
 
-## TLS / SSL
+## TLS / HTTP (shipped)
 
-| Tool | Role | When not to run |
+| Check | Role | When not to run |
 |------|------|-----------------|
-| **testssl.sh** / **sslscan** | Cipher/protocol posture | Against services with strict rate limits or mutual TLS you cannot satisfy. |
+| **TLS inspect** (built-in) | Certificate expiry and protocol version | Against hosts you do not operate |
+| **HTTP headers** (built-in) | Missing browser security headers | Against sites you do not operate |
 
-## Wireless (separate module, legal caution)
+External `testssl.sh` / `sslscan` are optional later wrappers; the console already ships a Python TLS check so you do not need those binaries.
 
-| Tool | Role | When not to run |
-|------|------|-----------------|
-| **Kismet** / **airodump-ng** |802.11 survey | Any network you do not own; jurisdictions vary. |
+## Not included (and not planned)
 
-## Password testing (lab + explicit consent only)
-
-| Tool | Role | When not to run |
-|------|------|-----------------|
-| **Hydra** / **hashcat** | Credential strength | Default in console: **blocked** unless `LAB_MODE=true` and extra acknowledgment. |
+Credential guessing (Hydra, hashcat), wireless cracking, and exploit payloads will not ship in this console.
 
 ## Traffic visibility (Phase 4+)
 
@@ -71,4 +66,4 @@ Curated engines the console can wrap. **Do not run** tools against systems you d
 
 ## MVP console
 
-The shipped MVP integrates **Nmap** only (`nmap_quick`, `nmap_safe_full`). Other tools are documented here for roadmap alignment.
+The shipped console integrates **Nmap**, **TLS inspect**, and **HTTP security headers**. Other tools stay on the roadmap.

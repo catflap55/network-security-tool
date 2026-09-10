@@ -43,6 +43,16 @@ class FindingRow(SQLModel, table=True):
     created_at: datetime = Field(default_factory=utcnow)
 
 
+class ScanSchedule(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    project_id: int = Field(foreign_key="project.id", index=True)
+    plugin_id: str
+    interval_hours: int = Field(default=24)
+    enabled: bool = Field(default=True)
+    last_run_at: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=utcnow)
+
+
 class SettingKV(SQLModel, table=True):
     key: str = Field(primary_key=True)
     value: str = Field(sa_column=Column(Text))

@@ -17,8 +17,8 @@ Aligned with the master plan. **Out of scope** lines clarify boundaries until th
 
 ## Phase 2 — Breadth and comparison
 
-- Nuclei with **pinned** template set; sslscan or testssl.sh wrapper.
-- Scheduled scans and **diff** between two job runs (new/removed/changed open ports).
+- Nuclei with **pinned** templates you supply (not bundled exploits); optional later.
+- Scheduled scans and **diff** between two job runs (new/removed/changed findings) — **shipped**.
 - See [PHASE2_EXTENSIONS.md](PHASE2_EXTENSIONS.md).
 
 **Out of scope until Phase 3:** OpenVAS, fleet agents.

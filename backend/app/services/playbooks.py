@@ -35,6 +35,38 @@ Install the required tool, enable `LAB_MODE` if this is a lab-only plugin, and r
 
 This result does not prove the host is clean—only that no open ports were found in the scanned set. Plan authenticated scans, host agents, or passive DNS/flow data for egress visibility.
 """,
+    "TLS_OK": """## TLS looks healthy
+
+Keep certificates on a renewal calendar. Prefer TLS 1.2+ only.
+""",
+    "TLS_LEGACY_PROTOCOL": """## Legacy TLS
+
+Disable SSLv3, TLS 1.0, and TLS 1.1 on the service. Keep TLS 1.2 or 1.3.
+""",
+    "TLS_CERT_EXPIRED": """## Expired certificate
+
+Replace the certificate immediately. Browsers and APIs will reject the host.
+""",
+    "TLS_CERT_EXPIRING": """## Certificate expiring soon
+
+Renew before the not-after date. Automate renewal (ACME) where you can.
+""",
+    "TLS_UNREACHABLE": """## No TLS listener
+
+Nothing accepted a TLS handshake on this port. Expected for hosts that are not web/TLS servers.
+""",
+    "HTTP_HEADERS_MISSING": """## Missing HTTP security headers
+
+Add HSTS, CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, and Permissions-Policy at the reverse proxy or app.
+""",
+    "HTTP_HEADERS_OK": """## HTTP security headers present
+
+Keep them in sync when you change the site.
+""",
+    "HTTP_UNREACHABLE": """## No HTTP response
+
+The host did not answer on 80/443. Fine for printers, IoT, or firewalled devices.
+""",
 }
 
 

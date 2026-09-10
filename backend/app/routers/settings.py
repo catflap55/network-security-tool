@@ -15,6 +15,8 @@ def read_settings(session: Session = Depends(get_session)) -> SettingsRead:
     return SettingsRead(
         authorization_acknowledged=get_authorization_acknowledged(session),
         lab_mode_enabled=s.lab_mode,
+        bind_host=s.host,
+        token_required=True,
     )
 
 

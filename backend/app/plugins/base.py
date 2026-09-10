@@ -13,6 +13,7 @@ class ScanPlugin(ABC):
     display_name: str
     description: str
     requires_lab_mode: bool = False
+    uses_subprocess: bool = True
     impact_summary: str = ""
 
     @abstractmethod
@@ -21,4 +22,7 @@ class ScanPlugin(ABC):
 
     @abstractmethod
     def parse_output(self, xml_bytes: bytes) -> list["NormalizedFinding"]:
+        raise NotImplementedError
+
+    def run_in_process(self, project: "Project", artifact_dir):
         raise NotImplementedError

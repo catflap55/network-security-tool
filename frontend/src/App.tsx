@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   api,
+  getConsoleToken,
   type Finding,
   type Job,
+  type JobDiff,
   type PluginInfo,
   type Project,
+  type Schedule,
   type Settings,
 } from './api'
 import { CopyBtn } from './CopyBtn'
+import { TokenGate } from './TokenGate'
 import {
   QUICK_START_STEPS,
   autoFixSnippets,
@@ -20,6 +24,8 @@ import {
 import './App.css'
 
 export default function App() {
+  const [unlocked, setUnlocked] = useState(() => Boolean(getConsoleToken()))
+  const [tokenError, setTokenError] = useState<string | null>(null)
   const [settings, setSettings] = useState<Settings | null>(null)
   const [settingsError, setSettingsError] = useState<string | null>(null)
   const [projects, setProjects] = useState<Project[]>([])
@@ -39,6 +45,11 @@ export default function App() {
     targets: '127.0.0.1',
     environment: 'mixed',
   })
+  const [diffOld, setDiffOld] = useState<number | ''>('')
+  const [diffNew, setDiffNew] = useState<number | ''>('')
+  const [diff, setDiff] = useState<JobDiff | null>(null)
+  const [schedules, setSchedules] = useState<Schedule[]>([])
+  const [schedHours, setSchedHours] = useState(24)
 
   const selectedPlugin = useMemo(
     () => plugins.find((p) => p.id === pluginId),
@@ -55,6 +66,11 @@ export default function App() {
     try {
       setSettings(await api.getSettings())
     } catch (e) {
+      if (e instanceof Error && e.message === 'TOKEN_REQUIRED') {
+        setUnlocked(false)
+        setTokenError('That token was rejected. Copy CONSOLE_TOKEN from backend/.env and try again.')
+        return
+      }
       setSettingsError(e instanceof Error ? e.message : 'Failed to load settings')
     }
   }, [])
@@ -76,9 +92,11 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    if (!unlocked) return
     void loadSettings()
     void loadPlugins()
-  }, [loadSettings, loadPlugins])
+    void api.listSchedules().then(setSchedules).catch(() => setSchedules([]))
+  }, [unlocked, loadSettings, loadPlugins])
 
   useEffect(() => {
     if (settings?.authorization_acknowledged) void loadProjects()
@@ -236,6 +254,18 @@ export default function App() {
     logFocusId != null &&
     logJob != null &&
     (logJob.status === 'running' || logJob.status === 'pending')
+
+  if (!unlocked) {
+    return (
+      <TokenGate
+        error={tokenError}
+        onReady={() => {
+          setTokenError(null)
+          setUnlocked(true)
+        }}
+      />
+    )
+  }
 
   async function stopScan() {
     if (!selectedProjectId || logFocusId == null) return
@@ -504,22 +534,24 @@ export default function App() {
                       </span>
                       {selectedJob && selectedJob.status === 'completed' && (
                         <>
-                          <a
+                          <button
+                            type="button"
                             className="btn tiny ghost"
-                            href={api.exportJsonUrl(selectedProjectId, selectedJob.id)}
-                            target="_blank"
-                            rel="noreferrer"
+                            onClick={() =>
+                              void api.downloadExport(selectedProjectId, selectedJob.id, 'json')
+                            }
                           >
                             Download report (JSON)
-                          </a>
-                          <a
+                          </button>
+                          <button
+                            type="button"
                             className="btn tiny ghost"
-                            href={api.exportSarifUrl(selectedProjectId, selectedJob.id)}
-                            target="_blank"
-                            rel="noreferrer"
+                            onClick={() =>
+                              void api.downloadExport(selectedProjectId, selectedJob.id, 'sarif')
+                            }
                           >
                             Download (SARIF)
-                          </a>
+                          </button>
                         </>
                       )}
                     </div>
@@ -544,6 +576,114 @@ export default function App() {
                       )}
                   </div>
                 </div>
+              </section>
+            )}
+            {selectedProjectId && jobs.length >= 2 && (
+              <section className="card">
+                <h2>Compare two checks</h2>
+                <p className="small muted">See what appeared or disappeared between two finished jobs.</p>
+                <div className="rowform">
+                  <select
+                    value={diffOld}
+                    onChange={(e) => setDiffOld(e.target.value ? Number(e.target.value) : '')}
+                  >
+                    <option value="">Older job</option>
+                    {jobs.map((j) => (
+                      <option key={j.id} value={j.id}>
+                        #{j.id} {j.plugin_id} ({j.status})
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={diffNew}
+                    onChange={(e) => setDiffNew(e.target.value ? Number(e.target.value) : '')}
+                  >
+                    <option value="">Newer job</option>
+                    {jobs.map((j) => (
+                      <option key={`n-${j.id}`} value={j.id}>
+                        #{j.id} {j.plugin_id} ({j.status})
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    className="btn"
+                    disabled={!diffOld || !diffNew || diffOld === diffNew}
+                    onClick={() => {
+                      void (async () => {
+                        try {
+                          setDiff(
+                            await api.diffJobs(selectedProjectId, Number(diffOld), Number(diffNew)),
+                          )
+                        } catch (e) {
+                          setErr(e instanceof Error ? e.message : 'Compare failed')
+                        }
+                      })()
+                    }}
+                  >
+                    Compare
+                  </button>
+                </div>
+                {diff && <p className="plain-lead">{diff.summary}</p>}
+              </section>
+            )}
+            {selectedProjectId && (
+              <section className="card">
+                <h2>Repeat this check</h2>
+                <p className="small muted">
+                  While this app is running it can start the selected check again every N hours.
+                  Closing the app stops the timer.
+                </p>
+                <div className="rowform">
+                  <input
+                    type="number"
+                    min={1}
+                    max={720}
+                    value={schedHours}
+                    onChange={(e) => setSchedHours(Number(e.target.value) || 24)}
+                  />
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => {
+                      void (async () => {
+                        try {
+                          const row = await api.createSchedule({
+                            project_id: selectedProjectId,
+                            plugin_id: pluginId,
+                            interval_hours: schedHours,
+                          })
+                          setSchedules((s) => [...s, row])
+                        } catch (e) {
+                          setErr(e instanceof Error ? e.message : 'Schedule failed')
+                        }
+                      })()
+                    }}
+                  >
+                    Schedule selected check
+                  </button>
+                </div>
+                <ul className="list">
+                  {schedules
+                    .filter((s) => s.project_id === selectedProjectId)
+                    .map((s) => (
+                      <li key={s.id}>
+                        Every {s.interval_hours}h — {s.plugin_id}{' '}
+                        <button
+                          type="button"
+                          className="btn tiny danger"
+                          onClick={() => {
+                            void (async () => {
+                              await api.deleteSchedule(s.id)
+                              setSchedules((all) => all.filter((x) => x.id !== s.id))
+                            })()
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    ))}
+                </ul>
               </section>
             )}
           </>

@@ -19,6 +19,7 @@ from app.services.job_control import (
     register_active_proc,
     unregister_active_proc,
 )
+from app.services.targets import TargetError, validate_targets
 
 
 def utcnow() -> datetime:
@@ -111,6 +112,18 @@ def run_job_sync(session: Session, job: Job, project: Project) -> None:
         _finalize_cancelled(session, job, log_body="Cancelled before scan started.\n")
         return
 
+    settings = get_settings()
+    cap = 4096 if settings.lab_mode else settings.max_cidr_hosts
+    try:
+        validate_targets(project.targets, max_targets=settings.max_targets, max_cidr_hosts=cap)
+    except TargetError as exc:
+        job.status = "failed"
+        job.finished_at = utcnow()
+        job.error_message = str(exc)
+        session.add(job)
+        session.commit()
+        return
+
     artifact_root = settings.data_dir / "artifacts" / str(job.id)
     artifact_root.mkdir(parents=True, exist_ok=True)
     job.artifact_dir = str(artifact_root)
@@ -122,6 +135,28 @@ def run_job_sync(session: Session, job: Job, project: Project) -> None:
 
     if is_cancel_requested(job.id):
         _finalize_cancelled(session, job, log_body=job.log_text + "Cancelled.\n")
+        return
+
+    if not plugin.uses_subprocess:
+        try:
+            findings, log_body = plugin.run_in_process(project, artifact_root)
+            job.log_text = log_body
+            if is_cancel_requested(job.id):
+                _finalize_cancelled(session, job, log_body=log_body + "\n— stopped by operator —\n")
+                return
+            _persist_findings(session, job.id, findings)
+            job.status = "completed"
+            job.error_message = None
+            job.finished_at = utcnow()
+            session.add(job)
+            session.commit()
+        except Exception as e:  # noqa: BLE001
+            job.status = "failed"
+            job.error_message = str(e)
+            job.log_text = str(e)
+            job.finished_at = utcnow()
+            session.add(job)
+            session.commit()
         return
 
     nmap_exe = resolve_nmap_path()
@@ -205,7 +240,7 @@ def run_job_sync(session: Session, job: Job, project: Project) -> None:
             job.log_text += "\n(process killed after timeout)\n"
         elif rc != 0:
             job.status = "failed"
-            job.error_message = f"nmap exited with code {rc}"
+            job.error_message = f"scanner exited with code {rc}"
         else:
             job.status = "completed"
             job.error_message = None

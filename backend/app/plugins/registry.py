@@ -4,25 +4,26 @@ from typing import Optional
 
 from app.config import get_settings
 from app.plugins.base import ScanPlugin
+from app.plugins.http_headers_plugin import HttpHeadersPlugin
 from app.plugins.nmap_plugins import (
-    LabAggressivePlaceholderPlugin,
+    LabDiscoveryPlugin,
     NmapQuickPlugin,
     NmapSafeFullPlugin,
 )
+from app.plugins.tls_plugin import TlsInspectPlugin
 
-_BASE_PLUGINS: list[ScanPlugin] = [
+_ALWAYS: list[ScanPlugin] = [
     NmapQuickPlugin(),
     NmapSafeFullPlugin(),
+    TlsInspectPlugin(),
+    HttpHeadersPlugin(),
 ]
 
 
 def plugin_catalog() -> list[tuple[ScanPlugin, bool, str | None]]:
-    """All wired plugins: (plugin, available_for_use, reason_if_unavailable)."""
     s = get_settings()
-    entries: list[tuple[ScanPlugin, bool, str | None]] = [
-        (p, True, None) for p in _BASE_PLUGINS
-    ]
-    lab = LabAggressivePlaceholderPlugin()
+    entries: list[tuple[ScanPlugin, bool, str | None]] = [(p, True, None) for p in _ALWAYS]
+    lab = LabDiscoveryPlugin()
     if s.lab_mode:
         entries.append((lab, True, None))
     else:
@@ -30,15 +31,13 @@ def plugin_catalog() -> list[tuple[ScanPlugin, bool, str | None]]:
             (
                 lab,
                 False,
-                "Set environment variable LAB_MODE=true on the API process and restart "
-                "(see docs/AUTO_FIX_POLICY.md).",
-            ),
+                "Set LAB_MODE=true on the API and restart for lab-only host discovery.",
+            )
         )
     return entries
 
 
 def all_plugins() -> list[ScanPlugin]:
-    """Plugins that can be run now (same as before)."""
     return [p for p, ok, _ in plugin_catalog() if ok]
 
 
