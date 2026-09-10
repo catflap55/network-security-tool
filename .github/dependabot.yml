@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    # Keep the repo on a single main branch. Security alerts still appear
+    # in the Security tab; this stops extra Dependabot version-bump branches.
+    open-pull-requests-limit: 0

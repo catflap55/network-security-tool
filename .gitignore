@@ -1,0 +1,14 @@
+data/
+backend/data/
+*.db
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+node_modules/
+frontend/dist/
+.env
+CONSOLE-TOKEN.txt
+*.log
+.cursor/

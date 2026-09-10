@@ -1,0 +1,26 @@
+This folder is for Windows PCs only.
+
+1. Install Python from https://www.python.org/downloads/
+   On the first screen tick: Add python.exe to PATH
+2. Install Node.js from https://nodejs.org/
+3. Install Nmap from https://nmap.org/download.html
+4. Double-click Start.cmd
+
+If Windows says it protected your PC: More info → Run anyway.
+
+If a Microsoft Store window opens for Python:
+  Settings → Apps → Advanced app settings → App execution aliases
+  Turn off python.exe. Reinstall Python with PATH ticked.
+
+Leave the extra window open while you use the app.
+
+If the page does not load, try http://localhost:5173
+then http://127.0.0.1:5173 — they are the same app.
+
+Unlock page: copy the token from the extra window (CONSOLE_TOKEN)
+or open CONSOLE-TOKEN.txt in the unzipped folder.
+
+Stop: double-click Stop.cmd
+
+Leave the extra window open while you use the app.
+More detail: ..\README.md  (Windows section)

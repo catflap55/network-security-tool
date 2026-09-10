@@ -1,0 +1,22 @@
+This folder is for Apple Mac only.
+
+FIRST: double-click Read-me-first.html (Safari will open).
+It shows the exact “Not Opened / malware” warning and the clicks
+to allow Start.command. Apple always shows that warning once.
+
+Then:
+1. Install Node.js from https://nodejs.org/
+2. Install Nmap from https://nmap.org/download.html
+3. Right-click Start.command  →  Open
+   (Do not double-click Start.command)
+
+Stop: right-click Stop.command → Open.
+
+Leave the text window open. Wait until it says Ready.
+Then open the app. Try http://localhost:5173 first.
+If that fails, try http://127.0.0.1:5173 — same app.
+If Safari says it cannot connect, the Start window is not running.
+
+When the Unlock page asks for a console token:
+  Click the text window, find CONSOLE_TOKEN, copy the long value.
+  Or open CONSOLE-TOKEN.txt in the unzipped folder (next to Mac).
