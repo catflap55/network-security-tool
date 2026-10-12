@@ -13,6 +13,18 @@
     "preview": "npm run preview -w frontend"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.2.5"
+  },
+  "overrides": {
+    "shell-quote": "^1.11.0",
+    "source-map-js": "1.2.2",
+    "minimatch": {
+      "brace-expansion": "1.1.21"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": {
+        "brace-expansion": "5.0.12"
+      }
+    }
   }
 }
